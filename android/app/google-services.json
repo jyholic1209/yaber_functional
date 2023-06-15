@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "474652276463",
+    "project_id": "app-yaber-test",
+    "storage_bucket": "app-yaber-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474652276463:android:cdf423f4db7ae2e3954d1a",
+        "android_client_info": {
+          "package_name": "com.example.flutter_yaber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "474652276463-p5td13qk58fe01vh2do53m4n628rdrh7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.flutter_yaber",
+            "certificate_hash": "48bf414304ad2d0fbcb8c4961fb1a4eb747ff763"
+          }
+        },
+        {
+          "client_id": "474652276463-a6dloc7bt1mc0e38ct5s37l9bff69iut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCl54i6ObNdrwD6D5lWyEpTxYpUc_QJIyI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "474652276463-a6dloc7bt1mc0e38ct5s37l9bff69iut.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "474652276463-ntdfaecjspg1np2a678nlms5039mob7b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterYaber"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

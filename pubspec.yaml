@@ -42,6 +42,10 @@ dependencies:
   geolocator: ^9.0.2
   geocoding: ^2.1.0
   geocoding_platform_interface: ^2.0.1
+  firebase_core: ^2.14.0
+  cloud_firestore: ^4.8.1
+  firebase_auth: ^4.6.3
+  firebase_storage: ^11.2.3
 
 dev_dependencies:
   flutter_test:

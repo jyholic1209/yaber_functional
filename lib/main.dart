@@ -1,12 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_yaber/binding/init_bindings.dart';
+import 'package:flutter_yaber/check_state.dart';
 import 'package:flutter_yaber/controllers/my_location_controller.dart';
+import 'package:flutter_yaber/firebase_options.dart';
 import 'package:flutter_yaber/locale/languages.dart';
 import 'package:flutter_yaber/pages/login.dart';
-import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -39,7 +43,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       initialBinding: InitBinding(),
-      home: Login(),
+      home: const CheckState(),
     );
   }
 }

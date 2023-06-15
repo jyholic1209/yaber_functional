@@ -81,7 +81,7 @@ class Login extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('가입하신 이메일 주소를 입력해 주시면 임시 비밀번호를 메일로 보내드리겠습니다.'),
+              Text('infomation_email'.tr),
               const SizedBox(height: 10),
               const TextField(
                 decoration: InputDecoration(
