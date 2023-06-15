@@ -7,8 +7,6 @@ class AuthController extends GetxController {
   static AuthController get to => Get.find();
   final _authentication = FirebaseAuth.instance;
   YUser? authUser;
-  // String? userEmail;
-  // String? userPassword;
 
   @override
   void onInit() {
@@ -17,7 +15,7 @@ class AuthController extends GetxController {
   }
 
   void _checklogin() {
-    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+    _authentication.authStateChanges().listen((User? user) async {
       if (user == null)
         return;
       else {
@@ -35,12 +33,21 @@ class AuthController extends GetxController {
   }
 
   Future<void> login(String email, String password) async {
-    final newUser = await _authentication.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    if (newUser != null) {
-      authUser = await UserRepository.findUserByUid(newUser.user!.uid);
+    try {
+      final credential = await _authentication.signInWithEmailAndPassword(
+          email: email, password: password);
+      authUser = await UserRepository.findUserByUid(credential.user!.uid);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
     }
+  }
+
+  Future<void> logout() async {
+    await _authentication.signOut();
+    authUser = null;
   }
 }
