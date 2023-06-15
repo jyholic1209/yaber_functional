@@ -14,7 +14,7 @@ class YUser {
   String? email;
   String? password;
   String? nationality;
-  String? porfileThumb;
+  String? profileThumb;
   String? peek;
   String? bookmark;
 
@@ -24,7 +24,7 @@ class YUser {
     this.email,
     this.password,
     this.nationality,
-    this.porfileThumb,
+    this.profileThumb,
     this.peek,
     this.bookmark,
   });
@@ -45,7 +45,7 @@ class YUser {
         email: email ?? this.email,
         password: password ?? this.password,
         nationality: nationality ?? this.nationality,
-        porfileThumb: porfileThumb ?? this.porfileThumb,
+        profileThumb: porfileThumb ?? this.profileThumb,
         peek: peek ?? this.peek,
         bookmark: bookmark ?? this.bookmark,
       );
@@ -57,9 +57,9 @@ class YUser {
         password: json["password"] == null ? '' : json["password"] as String,
         nationality:
             json["nationality"] == null ? '' : json["nationality"] as String,
-        porfileThumb: json["porfile_thumb"] == null
+        profileThumb: json["profile_thumb"] == null
             ? ''
-            : json["porfile_thumb"] as String,
+            : json["profile_thumb"] as String,
         peek: json["peek"] == null ? '' : json["peek"] as String,
         bookmark: json["bookmark"] == null ? '' : json["bookmark"] as String,
       );
@@ -70,7 +70,7 @@ class YUser {
         "email": email,
         "password": password,
         "nationality": nationality,
-        "porfile_thumb": porfileThumb,
+        "profile_thumb": profileThumb,
         "peek": peek,
         "bookmark": bookmark,
       };

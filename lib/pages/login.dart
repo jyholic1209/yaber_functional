@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_yaber/controllers/auth_controller.dart';
 import 'package:flutter_yaber/pages/home.dart';
 import 'package:flutter_yaber/pages/signup/signup_page.dart';
 import 'package:get/get.dart';
@@ -44,8 +45,12 @@ class Login extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               ElevatedButton(
-                onPressed: () {
-                  Get.to(const Home());
+                onPressed: () async {
+                  await AuthController.to
+                      .login(emailController.text, passwordController.text);
+                  if (AuthController.to.authUser != null) {
+                    Get.to(const Home());
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(800, 40),

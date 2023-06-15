@@ -17,4 +17,15 @@ class UserRepository {
       return null;
     }
   }
+
+  static Future<String?> signup(YUser? user) async {
+    if (user == null) return null;
+    var drf = await users.add(user.toMap());
+    return drf.id;
+  }
+
+  static Future<void> updateUserData(YUser? user) async {
+    if (user == null) return;
+    await users.doc(user.uid).update(user.toMap());
+  }
 }
