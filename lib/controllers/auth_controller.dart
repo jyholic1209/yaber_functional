@@ -16,9 +16,9 @@ class AuthController extends GetxController {
 
   void _checklogin() {
     _authentication.authStateChanges().listen((User? user) async {
-      if (user == null)
+      if (user == null) {
         return;
-      else {
+      } else {
         await findUser(user);
       }
     });
@@ -42,6 +42,8 @@ class AuthController extends GetxController {
         print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
+      } else {
+        print(e.message);
       }
     }
   }
@@ -49,5 +51,28 @@ class AuthController extends GetxController {
   Future<void> logout() async {
     await _authentication.signOut();
     authUser = null;
+  }
+
+  Future<void> sendTempPassword({required String email}) async {
+    try {
+      var result = await _authentication.fetchSignInMethodsForEmail(email);
+      if (result.length > 0) {
+        print(result);
+        try {
+          await _authentication.sendPasswordResetEmail(email: email);
+          print('mail send');
+        } on FirebaseAuthException catch (e) {
+          print('${e.code} : ${e.message}');
+        } catch (e) {
+          print(e.toString());
+        }
+      } else {
+        print('no result');
+      }
+    } on FirebaseAuthException catch (e) {
+      print('${e.code} : ${e.message}');
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

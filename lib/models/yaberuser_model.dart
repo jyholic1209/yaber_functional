@@ -35,7 +35,7 @@ class YUser {
     String? email,
     String? password,
     String? nationality,
-    String? porfileThumb,
+    String? profileThumb,
     String? peek,
     String? bookmark,
   }) =>
@@ -45,7 +45,7 @@ class YUser {
         email: email ?? this.email,
         password: password ?? this.password,
         nationality: nationality ?? this.nationality,
-        profileThumb: porfileThumb ?? this.profileThumb,
+        profileThumb: profileThumb ?? this.profileThumb,
         peek: peek ?? this.peek,
         bookmark: bookmark ?? this.bookmark,
       );

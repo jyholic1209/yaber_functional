@@ -13,8 +13,8 @@ class HomeMyPage extends StatelessWidget {
       padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Column(
         children: [
-          Row(
-            children: const [
+          const Row(
+            children: [
               SizedBox(width: 15),
               AvatarWidget(
                   thumbPath:

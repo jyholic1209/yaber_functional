@@ -5,7 +5,6 @@ import 'package:flutter_yaber/check_state.dart';
 import 'package:flutter_yaber/controllers/my_location_controller.dart';
 import 'package:flutter_yaber/firebase_options.dart';
 import 'package:flutter_yaber/locale/languages.dart';
-import 'package:flutter_yaber/pages/login.dart';
 import 'package:get/get.dart';
 
 void main() async {

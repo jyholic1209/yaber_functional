@@ -49,6 +49,8 @@ class Login extends StatelessWidget {
                   await AuthController.to
                       .login(emailController.text, passwordController.text);
                   if (AuthController.to.authUser != null) {
+                    emailController.clear();
+                    passwordController.clear();
                     Get.to(const Home());
                   }
                 },
@@ -78,6 +80,7 @@ class Login extends StatelessWidget {
   }
 
   Future<dynamic> _showConfirmDialog(BuildContext context) {
+    final TextEditingController tmpEmailController = TextEditingController();
     return showDialog(
       context: context,
       builder: (context) {
@@ -86,10 +89,11 @@ class Login extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('infomation_email'.tr),
+              Text('information_email'.tr),
               const SizedBox(height: 10),
-              const TextField(
-                decoration: InputDecoration(
+              TextField(
+                controller: tmpEmailController,
+                decoration: const InputDecoration(
                   labelText: 'Please enter your email',
                   border: OutlineInputBorder(
                       borderSide: BorderSide(style: BorderStyle.solid)),
@@ -100,17 +104,21 @@ class Login extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      // TO DO : email 발송
+                    onPressed: () async {
+                      print(tmpEmailController.text);
+                      await AuthController.to
+                          .sendTempPassword(email: tmpEmailController.text);
+                      tmpEmailController.clear();
+                      Get.back();
                     },
-                    child: const Text('발송'),
+                    child: Text('send'.tr),
                   ),
                   const SizedBox(width: 30),
                   ElevatedButton(
                     onPressed: () {
                       Get.back();
                     },
-                    child: const Text('취소'),
+                    child: Text('cancel'.tr),
                   ),
                 ],
               )

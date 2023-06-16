@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_yaber/controllers/auth_controller.dart';
 import 'package:flutter_yaber/pages/login.dart';
 import 'package:flutter_yaber/pages/setting/alarm_setting_page.dart';
 import 'package:flutter_yaber/pages/setting/myaccount_page.dart';
@@ -58,6 +59,7 @@ class SettingPage extends StatelessWidget {
                 const SizedBox(width: 30),
                 TextButton(
                     onPressed: () {
+                      AuthController.to.logout();
                       Get.offAll(Login());
                     },
                     child: const Text('로그아웃')),
