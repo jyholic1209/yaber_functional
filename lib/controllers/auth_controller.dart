@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_yaber/models/yaberuser_model.dart';
 import 'package:flutter_yaber/repository/user_repository.dart';
@@ -7,6 +9,7 @@ class AuthController extends GetxController {
   static AuthController get to => Get.find();
   final _authentication = FirebaseAuth.instance;
   YUser? authUser;
+  File? userPickedImage;
 
   @override
   void onInit() {
@@ -56,11 +59,9 @@ class AuthController extends GetxController {
   Future<void> sendTempPassword({required String email}) async {
     try {
       var result = await _authentication.fetchSignInMethodsForEmail(email);
-      if (result.length > 0) {
-        print(result);
+      if (result.isNotEmpty) {
         try {
           await _authentication.sendPasswordResetEmail(email: email);
-          print('mail send');
         } on FirebaseAuthException catch (e) {
           print('${e.code} : ${e.message}');
         } catch (e) {
@@ -75,4 +76,6 @@ class AuthController extends GetxController {
       print(e.toString());
     }
   }
+
+  void signUp() {}
 }

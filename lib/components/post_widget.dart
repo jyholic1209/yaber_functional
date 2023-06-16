@@ -51,20 +51,20 @@ class PostWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: const [
+            const Row(
+              children: [
                 Icon(Icons.chat),
                 Text('45'),
               ],
             ),
-            Row(
-              children: const [
+            const Row(
+              children: [
                 Icon(Icons.sentiment_satisfied),
                 Text('1000'),
               ],
             ),
-            Row(
-              children: const [
+            const Row(
+              children: [
                 Icon(Icons.sentiment_dissatisfied),
                 Text('200'),
               ],

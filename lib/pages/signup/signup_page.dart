@@ -37,10 +37,10 @@ class SignupPage extends StatelessWidget {
           Text('정보 입력'),
           Text('가입 완료'),
         ],
-        views: const [
-          TermsAgree(),
+        views: [
+          const TermsAgree(),
           InfoAgree(),
-          SignupEnd(),
+          const SignupEnd(),
         ],
       ),
     );

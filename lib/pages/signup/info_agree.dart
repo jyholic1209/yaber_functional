@@ -1,21 +1,59 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_yaber/components/avatar_widget.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_yaber/controllers/signup_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_yaber/pages/signup/signup_page.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
-class InfoAgree extends StatelessWidget {
-  const InfoAgree({super.key});
+class InfoAgree extends StatefulWidget {
+  InfoAgree({super.key});
+
+  @override
+  State<InfoAgree> createState() => _InfoAgreeState();
+}
+
+class _InfoAgreeState extends State<InfoAgree> {
+  File? pickedImage;
+
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _onProfileImage(
+    ImageSource source, {
+    required BuildContext context,
+  }) async {
+    if (context.mounted) {
+      try {
+        final XFile? pickedFile = await _picker.pickImage(
+          source: source,
+        );
+        pickedImage = pickedFile == null ? null : File(pickedFile.path);
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+  }
 
   Widget _myAvatar() {
+    const double imageSize = 100;
     return Stack(
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 15),
-          child: AvatarWidget(
-            thumbPath:
-                'https://img.hankyung.com/photo/202304/p1065571917157860_467_thum.jpg',
-            size: 100,
+        Padding(
+          padding: const EdgeInsets.only(left: 15),
+          child: Container(
+            width: imageSize,
+            height: imageSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Theme.of(Get.context!).indicatorColor,
+              image: pickedImage == null
+                  ? const DecorationImage(
+                      // image: AssetImage('assets/images/profile.jpeg'),
+                      image: Svg('assets/images/Default_pfp.svg'))
+                  : DecorationImage(image: FileImage(pickedImage!)),
+            ),
           ),
         ),
         Positioned(
@@ -26,16 +64,23 @@ class InfoAgree extends StatelessWidget {
               height: 35,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white,
+                color: Theme.of(Get.context!).focusColor,
                 border: Border.all(
-                  color: Colors.cyanAccent,
+                  color: Theme.of(Get.context!).cardColor,
                   width: 1,
                 ),
               ),
-              child: const Icon(
-                Icons.photo_camera,
-                color: Colors.black87,
-                size: 30,
+              child: GestureDetector(
+                onTap: () async {
+                  await _onProfileImage(ImageSource.gallery,
+                      context: Get.context!);
+                  setState(() {});
+                },
+                child: const Icon(
+                  Icons.photo_camera,
+                  color: Colors.black87,
+                  size: 30,
+                ),
               ),
             ))
       ],
@@ -44,7 +89,7 @@ class InfoAgree extends StatelessWidget {
 
   Widget _infoTable() {
     return Container(
-      width: Get.width * 0.8,
+      width: Get.width * 0.9,
       decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -57,9 +102,9 @@ class InfoAgree extends StatelessWidget {
           ),
         ),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: const [
+        children: [
           TableRowWidget('아이디*'),
           TableRowWidget('이메일*'),
           TableRowWidget('비밀번호 *'),
@@ -130,7 +175,7 @@ class TableRowWidget extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 120,
+          width: 100,
           height: 50,
           decoration: const BoxDecoration(
             border: Border(
@@ -144,7 +189,13 @@ class TableRowWidget extends StatelessWidget {
               ),
             ),
           ),
-          child: Center(child: Text(title)),
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
         ),
         Expanded(
           child: Container(
@@ -166,16 +217,26 @@ class TableRowWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 SizedBox(
-                  width: isHide ? 150 : 200,
-                  height: 35,
-                  child: const TextField(
+                  width: isHide ? 100 : 150,
+                  height: 40,
+                  child: TextField(
                     decoration: InputDecoration(
-                        hintText: '항목을 입력해 주세요',
-                        contentPadding: EdgeInsets.symmetric(vertical: 2),
-                        border: OutlineInputBorder()),
-                    style: TextStyle(fontSize: 13),
+                      // counterText를 적용하면 글자수 제한 글자가 보이지 않는다. (세로 밑에 글자수 제한)
+                      // 글자수 제한은 그대로 먹힘, 옆에 따로 가로로 텍스트 위젯을 만들어 글자수 제한을 표시하면 됨
+                      counterText: '',
+                      hintText: '항목을 입력해 주세요',
+                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 2),
+                      border: const OutlineInputBorder(gapPadding: 2.0),
+                    ),
+
+                    style: Theme.of(context).textTheme.bodySmall,
                     maxLines: 1,
                     minLines: 1,
+                    // 글자수 제한 및 더이상 입력 방지 기능
+                    // TODO : 아이디에만 적용할 것
+                    maxLength: 16,
+                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
                   ),
                 ),
                 SizedBox(
