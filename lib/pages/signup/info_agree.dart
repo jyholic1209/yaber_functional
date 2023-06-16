@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_yaber/controllers/auth_controller.dart';
 import 'package:flutter_yaber/controllers/signup_controller.dart';
+import 'package:flutter_yaber/models/yaberuser_model.dart';
 import 'package:get/get.dart';
 import 'package:flutter_yaber/pages/signup/signup_page.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,9 +19,14 @@ class InfoAgree extends StatefulWidget {
 
 class _InfoAgreeState extends State<InfoAgree> {
   File? pickedImage;
-
   final ImagePicker _picker = ImagePicker();
+  TextEditingController idController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController isoNationCodeController = TextEditingController();
 
+  void update() => setState(() {});
   Future<void> _onProfileImage(
     ImageSource source, {
     required BuildContext context,
@@ -31,7 +38,9 @@ class _InfoAgreeState extends State<InfoAgree> {
         );
         pickedImage = pickedFile == null ? null : File(pickedFile.path);
       } catch (e) {
-        print(e.toString());
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
       }
     }
   }
@@ -50,9 +59,10 @@ class _InfoAgreeState extends State<InfoAgree> {
               color: Theme.of(Get.context!).indicatorColor,
               image: pickedImage == null
                   ? const DecorationImage(
-                      // image: AssetImage('assets/images/profile.jpeg'),
-                      image: Svg('assets/images/Default_pfp.svg'))
-                  : DecorationImage(image: FileImage(pickedImage!)),
+                      image: Svg('assets/images/Default_pfp.svg'),
+                      fit: BoxFit.cover)
+                  : DecorationImage(
+                      image: FileImage(pickedImage!), fit: BoxFit.cover),
             ),
           ),
         ),
@@ -74,11 +84,11 @@ class _InfoAgreeState extends State<InfoAgree> {
                 onTap: () async {
                   await _onProfileImage(ImageSource.gallery,
                       context: Get.context!);
-                  setState(() {});
+                  update();
                 },
-                child: const Icon(
+                child: Icon(
                   Icons.photo_camera,
-                  color: Colors.black87,
+                  color: Theme.of(Get.context!).primaryColorDark,
                   size: 30,
                 ),
               ),
@@ -102,16 +112,144 @@ class _InfoAgreeState extends State<InfoAgree> {
           ),
         ),
       ),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TableRowWidget('아이디*'),
-          TableRowWidget('이메일*'),
-          TableRowWidget('비밀번호 *'),
-          TableRowWidget('비밀번호 재입력*'),
-          TableRowWidget('국가*'),
+          // TableRowWidget('아이디*'),
+          // TableRowWidget('이메일*'),
+          // TableRowWidget('비밀번호 *'),
+          // TableRowWidget('비밀번호 재입력*'),
+          // TableRowWidget('국가*'),
+          _tableRowInput(0),
+          _tableRowInput(1),
+          _tableRowInput(2),
+          _tableRowInput(3),
+          _tableRowInput(4),
         ],
       ),
+    );
+  }
+
+  Widget _tableRowInput(int index) {
+    String title = '';
+    switch (index) {
+      case 0:
+        title = '아이디';
+        break;
+      case 1:
+        title = '이메일';
+        break;
+      case 2:
+        title = '비밀번호';
+        break;
+      case 3:
+        title = '비밀번호 재입력';
+        break;
+      case 4:
+        title = '국가';
+        break;
+    }
+
+    return Row(
+      children: [
+        Container(
+          width: 100,
+          height: 50,
+          decoration: const BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                width: 1,
+                color: Colors.black,
+              ),
+              left: BorderSide(
+                width: 1,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            alignment: Alignment.center,
+            height: 50,
+            decoration: const BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  width: 1,
+                  color: Colors.black,
+                ),
+                left: BorderSide(
+                  width: 1,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                SizedBox(
+                  width: index == 4 ? 100 : 150,
+                  height: 40,
+                  child: TextField(
+                    controller: index == 0
+                        ? idController
+                        : index == 1
+                            ? emailController
+                            : index == 2
+                                ? passwordController
+                                : index == 3
+                                    ? confirmPasswordController
+                                    : isoNationCodeController,
+                    decoration: InputDecoration(
+                      // counterText를 적용하면 글자수 제한 글자가 보이지 않는다. (세로 밑에 글자수 제한)
+                      // 글자수 제한은 그대로 먹힘, 옆에 따로 가로로 텍스트 위젯을 만들어 글자수 제한을 표시하면 됨
+                      counterText: index == 0 ? '' : null,
+                      hintText: '항목을 입력해 주세요',
+                      hintStyle: Theme.of(context).textTheme.bodySmall,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 2),
+                      border: const OutlineInputBorder(gapPadding: 2.0),
+                    ),
+
+                    style: Theme.of(context).textTheme.bodySmall,
+                    maxLines: 1,
+                    minLines: 1,
+                    // 글자수 제한 및 더이상 입력 방지 기능
+                    // TODO : 아이디에만 적용할 것
+                    maxLength: index == 0 ? 16 : null,
+                    maxLengthEnforcement: index == 0
+                        ? MaxLengthEnforcement.enforced
+                        : MaxLengthEnforcement.none,
+                  ),
+                ),
+                SizedBox(
+                  width: index == 4 ? 45 : 0,
+                  height: 33,
+                  child: index == 4
+                      ? ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.all(0)),
+                          child: const Text(
+                            '검색',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          onPressed: () {
+                            // TODO : iso Code 가져오기
+                          },
+                        )
+                      : null,
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -140,7 +278,24 @@ class _InfoAgreeState extends State<InfoAgree> {
                 onPressed: () {
                   if (_isAgree()) {
                     Get.find<SignupController>().infoPageCheck(true);
+
+                    var newUser = YUser(
+                      email: emailController.text,
+                      password: passwordController.text,
+                      nickName: idController.text,
+                      nationality: isoNationCodeController.text,
+                    );
+                    if (pickedImage != null) {
+                      AuthController.to.signUp(newUser, pickedImage);
+                    } else {
+                      AuthController.to.signUp(newUser, null);
+                    }
                     tabKey.currentState?.next();
+                    idController.clear();
+                    emailController.clear();
+                    passwordController.clear();
+                    confirmPasswordController.clear();
+                    isoNationCodeController.clear();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('먼저 필수 약관을 확인하세요')),

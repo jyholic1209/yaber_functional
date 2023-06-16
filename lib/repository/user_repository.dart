@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_yaber/models/yaberuser_model.dart';
 
 class UserRepository {
@@ -18,10 +21,21 @@ class UserRepository {
     }
   }
 
-  static Future<String?> signup(YUser? user) async {
-    if (user == null) return null;
-    var drf = await users.add(user.toMap());
-    return drf.id;
+  static Future<bool> signup(YUser? user) async {
+    if (user == null) return false;
+    await users.doc(user.uid).set({
+      "uid": user.uid,
+      "nick_name": user.nickName,
+      "email": user.email,
+      "password": user.password,
+      "nationality": user.nationality,
+      "profile_thumb": user.profileThumb ?? '',
+      "peek": user.peek ?? '',
+      "bookmark": user.bookmark ?? '',
+    });
+    return true;
+    // var drf = await users.add(user.toMap());
+    // return drf.id;
   }
 
   static Future<void> updateUserData(YUser? user) async {

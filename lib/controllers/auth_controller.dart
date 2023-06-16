@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_yaber/models/yaberuser_model.dart';
+import 'package:flutter_yaber/pages/login.dart';
 import 'package:flutter_yaber/repository/user_repository.dart';
 import 'package:get/get.dart';
 
@@ -77,5 +80,57 @@ class AuthController extends GetxController {
     }
   }
 
-  void signUp() {}
+  void signUp(YUser user, File? pickedFile) async {
+    var uid = await _createSignup(user);
+    var updateUser = user.copyWith(uid: uid);
+    if (pickedFile == null) {
+      _submitSignUp(updateUser);
+    } else {
+      var task = uploadProfile(pickedFile,
+          '${updateUser.uid}/profile.${pickedFile.path.split('.').last}');
+      task.snapshotEvents.listen((event) async {
+        if (event.bytesTransferred == event.totalBytes &&
+            event.state == TaskState.success) {
+          var downloadUrl = await event.ref.getDownloadURL();
+          var updatedUserData = updateUser.copyWith(profileThumb: downloadUrl);
+          _submitSignUp(updatedUserData);
+        }
+      });
+    }
+    // 앱 다시 시작시 로그인 상태가 유지됨
+    // logout();
+  }
+
+  UploadTask uploadProfile(File? profileImage, String filename) {
+    final refImage =
+        FirebaseStorage.instance.ref().child('users').child(filename);
+    final metadata = SettableMetadata(
+        contentType: 'image/${filename.split('.').last}',
+        customMetadata: {'picked-file-path': profileImage!.path});
+    return refImage.putFile(profileImage, metadata);
+  }
+
+  void _submitSignUp(YUser user) async {
+    try {
+      await UserRepository.signup(user);
+    } catch (e) {
+      ScaffoldMessenger.of(Get.context!)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
+  Future<String?> _createSignup(YUser user) async {
+    try {
+      final userCredential =
+          await _authentication.createUserWithEmailAndPassword(
+              email: user.email!, password: user.password!);
+      return userCredential.user!.uid;
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(Get.context!)
+          .showSnackBar(SnackBar(content: Text(e.message!)));
+    } catch (e) {
+      ScaffoldMessenger.of(Get.context!)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 }
