@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_yaber/controllers/auth_controller.dart';
 
 import '../../components/avatar_widget.dart';
 
@@ -64,8 +65,8 @@ class MyAccountPage extends StatelessWidget {
           children: [
             _myAvatar(),
             const SizedBox(height: 20),
-            Column(
-              children: const [
+            const Column(
+              children: [
                 Text('계정 정보',
                     style: TextStyle(
                         fontSize: 15,
@@ -80,21 +81,30 @@ class MyAccountPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Row(
-              children: const [
-                Text(
+              children: [
+                const Text(
                   '아이디',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 Spacer(),
-                Text(
-                  'Yabber  >',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+                GestureDetector(
+                  onTap: () {
+                    // AuthController.to.updateUser(
+                    //   AuthController.to.authUser!,
+                    //   nickname: 'come on',
+                    // );
+                  },
+                  child: const Text(
+                    'Yabber  >',
+                    style:
+                        TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            Row(
-              children: const [
+            const Row(
+              children: [
                 Text(
                   '비밀번호',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),

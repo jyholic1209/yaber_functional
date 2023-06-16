@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_yaber/models/yaberuser_model.dart';
-import 'package:flutter_yaber/pages/login.dart';
 import 'package:flutter_yaber/repository/user_repository.dart';
 import 'package:get/get.dart';
 
@@ -12,7 +11,6 @@ class AuthController extends GetxController {
   static AuthController get to => Get.find();
   final _authentication = FirebaseAuth.instance;
   YUser? authUser;
-  File? userPickedImage;
 
   @override
   void onInit() {
@@ -45,18 +43,22 @@ class AuthController extends GetxController {
       authUser = await UserRepository.findUserByUid(credential.user!.uid);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        _showMessage('No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        _showMessage('Wrong password provided for that user.');
       } else {
-        print(e.message);
+        _showMessage(e.message!);
       }
     }
   }
 
   Future<void> logout() async {
-    await _authentication.signOut();
-    authUser = null;
+    try {
+      await _authentication.signOut();
+      authUser = null;
+    } catch (e) {
+      _showMessage(e.toString());
+    }
   }
 
   Future<void> sendTempPassword({required String email}) async {
@@ -66,17 +68,17 @@ class AuthController extends GetxController {
         try {
           await _authentication.sendPasswordResetEmail(email: email);
         } on FirebaseAuthException catch (e) {
-          print('${e.code} : ${e.message}');
+          _showMessage('${e.code} : ${e.message}');
         } catch (e) {
-          print(e.toString());
+          _showMessage(e.toString());
         }
       } else {
-        print('no result');
+        _showMessage('no result');
       }
     } on FirebaseAuthException catch (e) {
-      print('${e.code} : ${e.message}');
+      _showMessage('${e.code} : ${e.message}');
     } catch (e) {
-      print(e.toString());
+      _showMessage(e.toString());
     }
   }
 
@@ -114,8 +116,7 @@ class AuthController extends GetxController {
     try {
       await UserRepository.signup(user);
     } catch (e) {
-      ScaffoldMessenger.of(Get.context!)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      _showMessage(e.toString());
     }
   }
 
@@ -126,11 +127,39 @@ class AuthController extends GetxController {
               email: user.email!, password: user.password!);
       return userCredential.user!.uid;
     } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(Get.context!)
-          .showSnackBar(SnackBar(content: Text(e.message!)));
+      _showMessage(e.message!);
     } catch (e) {
-      ScaffoldMessenger.of(Get.context!)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      _showMessage(e.toString());
     }
+  }
+
+  void updateUser(YUser user,
+      {final String? uid,
+      final String? nickname,
+      final String? email,
+      final String? password,
+      final String? nationality,
+      final String? profileThumb,
+      final String? peek,
+      final String? bookmark}) async {
+    try {
+      var updateUserdata = user.copyWith(
+          uid: uid,
+          nickName: nickname,
+          email: email,
+          password: password,
+          nationality: nationality,
+          profileThumb: profileThumb,
+          peek: peek,
+          bookmark: bookmark);
+      await UserRepository.updateUserData(updateUserdata);
+    } catch (e) {
+      _showMessage(e.toString());
+    }
+  }
+
+  void _showMessage(String err) {
+    ScaffoldMessenger.of(Get.context!)
+        .showSnackBar(SnackBar(content: Text(err)));
   }
 }
