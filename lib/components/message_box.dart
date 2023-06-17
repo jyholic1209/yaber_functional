@@ -10,7 +10,7 @@ class MessageBox extends StatelessWidget {
   final Function()? cancelCallback;
   const MessageBox({
     super.key,
-    required this.title,
+    this.title,
     required this.message,
     required this.buttonText1,
     required this.okCallback,

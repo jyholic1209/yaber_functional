@@ -1,13 +1,15 @@
+import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 
 class SignupController extends GetxController {
+  static SignupController get to => Get.find();
   // 약관 동의 체크박스
   RxBool isPrivateCheck = false.obs;
   RxBool isLocationCheck = false.obs;
   RxBool isMarketingCheck = false.obs;
 
-  // 정보 저장이 잘 됐는지 확인
-  RxBool isInfoCheck = false.obs;
+  // 필수 약관 저장 자동 확인
+  bool isInfoCheck = false;
 
   void signupControllerCheck(int index, bool value) {
     switch (index) {
@@ -23,7 +25,11 @@ class SignupController extends GetxController {
     }
   }
 
-  void infoPageCheck(bool value) {
-    isInfoCheck(value);
+  bool isTermAgreed() {
+    if (isPrivateCheck.isTrue && isLocationCheck.isTrue) {
+      return isInfoCheck = true;
+    } else {
+      return isInfoCheck = false;
+    }
   }
 }

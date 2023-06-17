@@ -1,5 +1,7 @@
+import 'package:flutter_yaber/components/message_box.dart';
 import 'package:flutter_yaber/components/terms_webview_widget.dart';
 import 'package:flutter_yaber/controllers/signup_controller.dart';
+import 'package:flutter_yaber/pages/login.dart';
 import 'package:flutter_yaber/pages/signup/signup_page.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,14 @@ class TermsAgree extends StatelessWidget {
             const Terms(term: '위치기반서비스 이용약관(필수)', index: 2),
             const Terms(term: '마케팅 정보 수신 전체 동의(필수)', index: 3),
             ElevatedButton(
-                onPressed: () => tabKey.currentState?.next(),
+                onPressed: () {
+                  if (SignupController.to.isTermAgreed()) {
+                    tabKey.currentState?.next();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('필수 약관 동의가 필요합니다.')));
+                  }
+                },
                 child: const Text('다 음'))
           ],
         ),
@@ -43,9 +52,10 @@ class Terms extends GetView<SignupController> {
   @override
   Widget build(BuildContext context) {
     if (index < 1 || index > 3) {
-      return const Center(
-        child: Text('index error'),
-      );
+      return MessageBox(
+          message: 'index error',
+          buttonText1: '돌아가기',
+          okCallback: () => Get.offAll(Login()));
     }
     return Obx(
       () => Row(

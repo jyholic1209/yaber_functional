@@ -11,11 +11,7 @@ class SignupEnd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isTermsCheck1 = Get.find<SignupController>().isPrivateCheck.value;
-    var isTermsCheck2 = Get.find<SignupController>().isLocationCheck.value;
-    var isInfoCheck3 = Get.find<SignupController>().isInfoCheck.value;
-
-    if (isTermsCheck1 && isTermsCheck2 && isInfoCheck3) {
+    if (SignupController.to.isInfoCheck == true) {
       return MessageBox(
         title: 'Yaber',
         message: 'Yaber 회원가입이 완료되었습니다.',

@@ -18,7 +18,7 @@ class MyLocationController extends GetxController {
   }
 
   void reloadPosition() {
-    timer = Timer.periodic(Duration(minutes: 10), (timer) async {
+    timer = Timer.periodic(const Duration(minutes: 10), (timer) async {
       await _getCurrentPosition();
       // TODO : home화면 갱신
       // update();를 하려면 홈 화면을에 바인딩 필요

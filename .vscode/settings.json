@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["checklogin", "firestore", "Getx"]
+  "cSpell.words": [
+    "checklogin",
+    "firestore",
+    "Geolocator",
+    "Getx",
+    "Placemark",
+    "placemarks"
+  ]
 }

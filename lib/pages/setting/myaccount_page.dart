@@ -8,30 +8,19 @@ import '../../components/avatar_widget.dart';
 class MyAccountPage extends StatelessWidget {
   const MyAccountPage({super.key});
 
-  bool isAuthUser() {
-    if (AuthController.to.authUser == null) {
-      return false;
-    } else if (AuthController.to.authUser!.profileThumb == null) {
-      return false;
-    } else if (AuthController.to.authUser!.profileThumb == '') {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   Widget _myAvatar() {
     return Stack(
       children: [
         Padding(
-          padding: EdgeInsets.only(left: 15),
-          child: isAuthUser()
+          padding: const EdgeInsets.only(left: 15),
+          child: AuthController.to.isUserProfile()
               ? AvatarWidget(
                   thumbPath: AuthController.to.authUser!.profileThumb!,
                   size: 100,
                 )
               : const Image(
-                  image: Svg('assets/images/Default_pfp.svg'),
+                  image: Svg('assets/images/Default_pfp.svg',
+                      size: Size(100, 100)),
                 ),
         ),
         Positioned(

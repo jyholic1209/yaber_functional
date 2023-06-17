@@ -4,13 +4,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_yaber/models/yaberuser_model.dart';
+import 'package:flutter_yaber/pages/signup/info_agree.dart';
 import 'package:flutter_yaber/repository/user_repository.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthController extends GetxController {
   static AuthController get to => Get.find();
   final _authentication = FirebaseAuth.instance;
   YUser? authUser;
+  File? pickedImage;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void onInit() {
@@ -173,5 +177,21 @@ class AuthController extends GetxController {
   void _showMessage(String err) {
     ScaffoldMessenger.of(Get.context!)
         .showSnackBar(SnackBar(content: Text(err)));
+  }
+
+  Future<void> onProfileImage(
+    ImageSource source, {
+    required BuildContext context,
+  }) async {
+    if (context.mounted) {
+      try {
+        final XFile? pickedFile = await _picker.pickImage(
+          source: source,
+        );
+        pickedImage = pickedFile == null ? null : File(pickedFile.path);
+      } catch (e) {
+        _showMessage(e.toString());
+      }
+    }
   }
 }
