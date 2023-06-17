@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:flutter_yaber/components/avatar_widget.dart';
 import 'package:flutter_yaber/components/message_box.dart';
 import 'package:flutter_yaber/components/post_widget.dart';
 import 'package:get/get.dart';
+
+import '../../controllers/auth_controller.dart';
 
 class HomeMyPage extends StatelessWidget {
   const HomeMyPage({super.key});
@@ -13,14 +16,23 @@ class HomeMyPage extends StatelessWidget {
       padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Column(
         children: [
-          const Row(
+          Row(
             children: [
-              SizedBox(width: 15),
-              AvatarWidget(
-                  thumbPath:
-                      'https://img.hankyung.com/photo/202304/p1065571917157860_467_thum.jpg'),
-              SizedBox(width: 10),
-              Text('Ahnpro'),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                ),
+                child: AuthController.to.isUserProfile()
+                    ? AvatarWidget(
+                        thumbPath: AuthController.to.authUser!.profileThumb!,
+                        size: 70,
+                      )
+                    : const Image(
+                        image: Svg('assets/images/Default_pfp.svg',
+                            size: Size(70, 70)),
+                      ),
+              ),
+              Text(AuthController.to.authUser!.nickName!),
             ],
           ),
           const SizedBox(height: 10),

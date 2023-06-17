@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:flutter_yaber/controllers/auth_controller.dart';
+import 'package:get/get.dart';
 
 import '../../components/avatar_widget.dart';
 
 class MyAccountPage extends StatelessWidget {
   const MyAccountPage({super.key});
 
+  bool isAuthUser() {
+    if (AuthController.to.authUser == null) {
+      return false;
+    } else if (AuthController.to.authUser!.profileThumb == null) {
+      return false;
+    } else if (AuthController.to.authUser!.profileThumb == '') {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Widget _myAvatar() {
     return Stack(
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(left: 15),
-          child: AvatarWidget(
-            thumbPath:
-                'https://img.hankyung.com/photo/202304/p1065571917157860_467_thum.jpg',
-            size: 100,
-          ),
+          child: isAuthUser()
+              ? AvatarWidget(
+                  thumbPath: AuthController.to.authUser!.profileThumb!,
+                  size: 100,
+                )
+              : const Image(
+                  image: Svg('assets/images/Default_pfp.svg'),
+                ),
         ),
         Positioned(
             right: 0,
@@ -89,13 +106,14 @@ class MyAccountPage extends StatelessWidget {
                 Spacer(),
                 GestureDetector(
                   onTap: () {
+                    // 데이터 변경 처리 완료. UI에 맞출 필요 있음
                     // AuthController.to.updateUser(
                     //   AuthController.to.authUser!,
                     //   nickname: 'come on',
                     // );
                   },
-                  child: const Text(
-                    'Yabber  >',
+                  child: Text(
+                    '${AuthController.to.authUser!.nickName!}  >',
                     style:
                         TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
                   ),
@@ -105,6 +123,7 @@ class MyAccountPage extends StatelessWidget {
             const SizedBox(height: 10),
             const Row(
               children: [
+                // TODO : 빼는 것이 좋을 것 같음.
                 Text(
                   '비밀번호',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
@@ -118,29 +137,31 @@ class MyAccountPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Row(
-              children: const [
-                Text(
+              children: [
+                const Text(
                   '이메일',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
-                  'abc@gmail.com  >',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+                  '${AuthController.to.authUser!.email!}  >',
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.normal),
                 ),
               ],
             ),
             const SizedBox(height: 10),
             Row(
-              children: const [
-                Text(
+              children: [
+                const Text(
                   '국가',
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
-                  'South Korea  >',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+                  '${AuthController.to.authUser!.nationality!}  >',
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.normal),
                 ),
               ],
             ),
@@ -154,7 +175,7 @@ class MyAccountPage extends StatelessWidget {
                 ),
                 const SizedBox(width: 30),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => Get.back(),
                   child: const Text('취소'),
                 ),
               ],

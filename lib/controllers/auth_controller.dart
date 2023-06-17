@@ -18,6 +18,18 @@ class AuthController extends GetxController {
     _checklogin();
   }
 
+  bool isUserProfile() {
+    if (authUser == null) {
+      return false;
+    } else if (authUser!.profileThumb == null) {
+      return false;
+    } else if (authUser!.profileThumb == '') {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   void _checklogin() {
     _authentication.authStateChanges().listen((User? user) async {
       if (user == null) {
